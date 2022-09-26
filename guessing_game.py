@@ -8,8 +8,20 @@ NOTE: If you prefer to work locally on your own computer, you can totally do tha
 
 """
 
-import random
+from random import random
+from statistics import median
+from statistics import mode
+from statistics import mean
+import sys
 
+guess_counts = [];
+
+def get_new_guess(text):    
+    try:
+        return int(input(text))
+    except (ValueError, TypeError):
+        return get_new_guess("That is not a valid value.. Try again: ")
+        
 
 def start_game():
     """Psuedo-code Hints
@@ -31,8 +43,54 @@ def start_game():
     ( You can add more features/enhancements if you'd like to. )
     """
     # write your code inside this function.
-
-
+    
+    
+    SOLUTION = int(random() * 100)
+    
+    if len(guess_counts) != 0:
+        high_score = min(guess_counts)
+        print("##### Welcome back! #####")
+        print(f"Can you beat the high score of {high_score} attempts?")
+    else:
+        print("##### Welcome to this Number Guessing Game #####")
+    
+    guess = get_new_guess("Guess a number between 1 and 100: ")
+    attempts_count = 1;
+        
+    while guess != SOLUTION:
+        
+        if guess > 0 and guess <= 100:
+            if guess > SOLUTION:
+                print(f"It's lower. Try again")
+            else:
+                print(f"It's higher. Try again")
+            
+            attempts_count += 1
+            guess = get_new_guess("Guess a number: ")
+        else:
+            guess = get_new_guess("Try guessing a number between 1 and 100: ")
+    
+    
+    guess_counts.append(attempts_count)
+    
+    median_score = median(guess_counts)
+    mode_score = mode(guess_counts)
+    mean_score = mean(guess_counts)
+                
+    print("You got it! Nicely done! ")
+    print(f"You only needed {attempts_count} attempts to make it right! ")
+    print("### Here are some awesome stats for you ###")
+    print(f"Median: {median_score}")
+    print(f"Mode: {mode_score}")
+    print(f"Mean: {mean_score}")
+    
+    start_over = input("Do you want to start over? Y/N   ").lower()
+    
+    if start_over == "y":
+        start_game()
+    else:
+        sys.exit("Welcome back any time :)")
+    
 
 # Kick off the program by calling the start_game function.
 start_game()
